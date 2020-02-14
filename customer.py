@@ -7,9 +7,11 @@ class customerList:
         self.tn = 'mailhotd_customers'
         self.fnl = ['fname','lname','email','password','subscribed'] #need a function to validate the differences in each fieldname
         self.errorlist = []
+        self.conn = None
+        self.pk = 'id'
     def connect(self):
         import config
-        return pymysql.connect(host=config.DB['host'], port=config.DB['port'], user=config.DB['user'], passwd=config.DB['passwd'], db=config.DB['db'], autocommit=True)
+        self.conn = pymysql.connect(host=config.DB['host'], port=config.DB['port'], user=config.DB['user'], passwd=config.DB['passwd'], db=config.DB['db'], autocommit=True)
     def add(self): #Good to have class def without inputs so that it can be tested
         self.data.append(self.tempdata)
     def set(self,fn,val):
@@ -27,29 +29,43 @@ class customerList:
             print('Could not set value at row ' + str(n) + ' col ' + str(fn))
     def insert(self, n = 0): # make an insert based on the 0th row of the query
     
-        cols = '`,`'.join(self,fnl) #used \ because we want the quote to be literal, thus using backslash as escape character is necessary when we want control chars to be literal chars.
+        cols = '`,`'.join(self.fnl) #used \ because we want the quote to be literal, thus using backslash as escape character is necessary when we want control chars to be literal chars.
         
-        cols = '`'+cols+'`'
+        cols = '`' + cols + '`'
     
-        vals = ('%s, ' * len(self.fnl))[:-1]
+        vals = ('%s,' * len(self.fnl))[:-1]
         
         tokens = []
-        
+      
         #order of dictionary and its composition (values) can change so we use fnl for inserting into DB
         for fieldname in self.fnl:
             tokens.append(self.data[n][fieldname])
         
-        #cur.execute("DROP TABLE IF EXISTS `mailhotd_customers`")
-        
         sql = 'INSERT INTO `' + self.tn + '` (' +cols+ ') VALUES (' +vals+ ');'
         
-        conn = self.connect()
+        
+        
+        self.connect()
 
-        cur = conn.cursor(pymysql.cursors.DictCursor)
+        cur = self.conn.cursor(pymysql.cursors.DictCursor)
    
         print(sql)
         print(tokens)
     
+        cur.execute(sql,tokens)
+        
+        self.data[n][self.pk] = cur.lastrowid
+        
+    def delete(self,n=0):
+        item = self.data.pop(n)
+        self.deleteByID(item[self.pk])
+        
+    def deleteByID(self,id):
+        sql = 'DELETE FROM `' + self.tn + '` WHERE `' +self.pk+ '` =%s;'
+        tokens = (id)
+        self.connect()
+        cur = self.conn.cursor(pymysql.cursors.DictCursor)
+        
         cur.execute(sql,tokens)
         
     def verifyNew(self, n = 0):  # return true or false, keep track of all attempts in it's own data structure (list)
