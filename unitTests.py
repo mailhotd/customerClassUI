@@ -17,6 +17,7 @@ cl.add()
 cl.deleteByID(cl.data[1]['id'])
 #cl.insert()
 
+
 '''
 # d = {'fname':'Testguy','lname':'test','email':'a@a.com','password':'123','subscribed':'1'}
 
