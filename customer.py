@@ -59,34 +59,20 @@ class customerList:
         self.data[n][self.pk] = cur.lastrowid
         
 
+<<<<<<< Updated upstream
         
     def verifyNew(self, n = 0):  # return true or false, keep track of all attempts in it's own data structure (list)
         self.errorlist = []
+=======
+    def delete(self,n=0):
+        item = self.data.pop(n)
+        self.deleteByID(item[self.pk])
 
-        if len(self.data[n]['fname']) == 0:
-            self.errorlist.append("First name cannot be blank") #no fields can be blank
-            
-        if len(self.data[n]['lname']) == 0:
-            self.errorlist.append("Last name cannot be blank") #no fields can be blank
-            
-        if len(self.data[n]['email']) == 0:
-            self.errorlist.append("Email cannot be blank") #no fields can be blank
-        if '@' and '.' in self.data[n]['email']: #email address must contain . and @
-            pass
-        else:
-            self.errorlist.append("Email address invalid, make sure you include '.' and '@'")
-            
-        if len(self.data[n]['password']) == 0:
-            self.errorlist.append("Password cannot be blank") #no fields can be blank
-        if len(self.data[n]['password']) < 5:
-            self.errorlist.append("Password must be longer than 4 characters") #password must be longer than 4 characters
-        if len(self.data[n]['subscribed']) == 0:
-            self.errorlist.append("Subscription cannot be blank") #no fields can be blank
-        elif self.data[n]['subscribed'] != 'True':
-            if self.data[n]['subscribed'] != 'False':
-                self.errorlist.append("Subscription must be True or False") #subscribed must be 'True' or 'False'
+    def deleteByID(self, id):
+        sql = 'DELETE FROM `' + self.tn + '` WHERE `' + self.pk + '` = %s;'
+        tokens = (id)
+        self.connect()
+        cur = self.conn.cursor(pymysql.cursors.DictCursor)
+        cur.execute(sql,tokens)
+>>>>>>> Stashed changes
 
-        if len(self.errorlist) > 0:
-            return False
-        else:
-            return True
