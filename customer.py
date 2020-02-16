@@ -56,18 +56,6 @@ class customerList:
         
         self.data[n][self.pk] = cur.lastrowid
         
-    def delete(self,n=0):
-        item = self.data.pop(n)
-        self.deleteByID(item[self.pk])
-        
-    def deleteByID(self,id):
-        sql = 'DELETE FROM `' + self.tn + '` WHERE `' +self.pk+ '` =%s;'
-        tokens = (id)
-        self.connect()
-        cur = self.conn.cursor(pymysql.cursors.DictCursor)
-        
-        cur.execute(sql,tokens)
-        
     def verifyNew(self, n = 0):  # return true or false, keep track of all attempts in it's own data structure (list)
         self.errorlist = []
 
