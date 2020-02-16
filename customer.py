@@ -57,13 +57,7 @@ class customerList:
         cur.execute(sql,tokens)
         
         self.data[n][self.pk] = cur.lastrowid
-        
-
-<<<<<<< Updated upstream
-        
-    def verifyNew(self, n = 0):  # return true or false, keep track of all attempts in it's own data structure (list)
-        self.errorlist = []
-=======
+ 
     def delete(self,n=0):
         item = self.data.pop(n)
         self.deleteByID(item[self.pk])
@@ -74,5 +68,4 @@ class customerList:
         self.connect()
         cur = self.conn.cursor(pymysql.cursors.DictCursor)
         cur.execute(sql,tokens)
->>>>>>> Stashed changes
 
