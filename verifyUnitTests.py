@@ -12,3 +12,4 @@ cl.set('subscribed','True')
 cl.add()
 cl.verifyNew()
 print(cl.errorlist)
+
